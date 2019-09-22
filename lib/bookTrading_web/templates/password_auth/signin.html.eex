@@ -1,0 +1,32 @@
+<div class="container">
+  <form action="/signin" method="post">
+    <div class="field">
+      <label class="label title is-6">Username</label>
+      <input type="hidden" value="<%= @token %>" name="_csrf_token" />
+      <div class="control">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="username"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label title is-6">Password</label>
+      <div class="control">
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="password"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <input type="submit" class="button is-small" value="Submit" />
+      </div>
+    </div>
+  </form>
+</div>

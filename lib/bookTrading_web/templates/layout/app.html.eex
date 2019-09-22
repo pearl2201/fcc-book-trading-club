@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BookTrading · Phoenix Framework</title>
+     <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+    ></script>
+
+ 
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+  </head>
+  <body>
+    
+  
+  <nav class="navbar">
+   <div class="navbar-start">
+     <%= if @current_user do %>
+      <div class="buttons">
+      
+      <%= link "Books", to: Routes.user_book_path(@conn, :index), class: "button is-primary is-small" %>
+      <%= link "Transactions", to: Routes.user_transaction_path(@conn, :index), class: "button is-primary is-small" %>
+      </div>
+     <% end %>
+   </div>
+    <%= if @current_user do %>
+    <div class="navbar-end">
+      <div class="buttons">
+        
+          <a class="button is-dark is-small" href="/signout">
+            Signout
+          </a>
+       
+                
+      
+      
+      </div>
+    </div>
+    <% else %>
+    <div class="navbar-end">
+      <div class="buttons">
+        
+          <a class="button is-dark is-small" href="/signup">
+            Signup
+          </a>
+       
+                
+          <a class="button is-dark is-small" href="/signin">
+            Signin
+          </a>
+      
+      </div>
+    </div>
+    <% end %>
+    </nav>
+      <main role="main" class="container">
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= render @view_module, @view_template, assigns %>
+    </main>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

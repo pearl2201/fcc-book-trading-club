@@ -1,0 +1,47 @@
+<div class="container">
+  <form action="/signup" method="post">
+    <div class="field">
+      <label class="label title is-6">Username</label>
+      <input type="hidden" value="<%= @token %>" name="_csrf_token"/>
+      <div class="control">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="username"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label title is-6">Password</label>
+      <div class="control">
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="password"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label title is-6">Confirm password</label>
+      <div class="control">
+        <input
+          type="password"
+          name="password_confirmation"
+          id="password_confirmation"
+          placeholder="password_confirmation"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label title is-6">Email</label>
+      <div class="control">
+        <input type="email" name="email" id="email" placeholder="email" />
+      </div>
+    </div>
+    <div class="field">
+      <input type="submit" class="button is-small" value="Submit" />
+    </div>
+  </form>
+</div>
