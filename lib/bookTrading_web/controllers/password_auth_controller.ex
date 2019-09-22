@@ -3,9 +3,10 @@ defmodule BookTradingWeb.PasswordAuthController do
   alias BookTrading.PasswordAccount
   alias BookTrading.Account.Guardian, as: Account_Guardian
 
-  def new(conn, params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    render(conn, "signup.html", current_user: current_user, token: get_csrf_token())
+  def new(conn, _params) do
+    conn
+    |> put_user
+    |> render("signup.html", token: get_csrf_token())
   end
 
   def create(conn, params) do

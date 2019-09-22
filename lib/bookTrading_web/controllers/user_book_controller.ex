@@ -1,6 +1,7 @@
 defmodule BookTradingWeb.UserBookController do
   use BookTradingWeb, :controller
 
+  alias BookTrading.BookTrade.Book
   alias BookTrading.BookManagement
 
   def index(conn, _params) do
@@ -13,15 +14,15 @@ defmodule BookTradingWeb.UserBookController do
   end
 
   def new(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+    changeset = BookManagement.change_book(%Book{})
 
     conn
     |> put_user
-    |> render("index.html", books: books)
+    |> render("new.html", changeset: changeset, token: get_csrf_token())
   end
 
-  def create(conn, _params) do
+  def create(conn, params) do
+    IO.inspect(params)
     current_user = Guardian.Plug.current_resource(conn)
     books = BookManagement.list_user_book(current_user.id)
 

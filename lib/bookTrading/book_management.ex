@@ -10,7 +10,10 @@ defmodule BookTrading.BookManagement do
   end
 
   def add_user_book(attrs \\ %{}, owner_id) do
-    %Book{} |> Book.changeset(Map.put(attrs, :owner_id, owner_id)) |> Repo.insert
-    
+    %Book{} |> Book.changeset(Map.put(attrs, :owner_id, owner_id)) |> Repo.insert()
+  end
+
+  def change_book(%Book{} = book) do
+    book |> Book.changeset(%{})
   end
 end

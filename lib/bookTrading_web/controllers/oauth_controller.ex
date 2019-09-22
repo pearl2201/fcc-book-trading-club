@@ -8,6 +8,7 @@ defmodule BookTradingWeb.OAuthController do
 
   alias Ueberauth.Strategy.Helpers
   alias BookTrading.OAuthAccount
+  alias BookTrading.Account
   alias BookTrading.Account.Guardian, as: Account_Guardian
 
   def request(conn, _params) do
@@ -52,7 +53,7 @@ defmodule BookTradingWeb.OAuthController do
   end
 
   def hack(conn, %{"id" => id}) do
-    user = OAuthAccount.get_user!(id)
+    user = Account.get_user!(id)
 
     conn
     |> Guardian.Plug.sign_in(Account_Guardian, user)
