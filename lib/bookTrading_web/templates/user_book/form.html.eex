@@ -1,44 +1,39 @@
 <section class="section">
-    <div class="container">
-
-        <%= form_for @changeset, @action, [multipart: true, csrf_token: true ], fn f -> %>
-            <%= if @changeset.action do %>
-                <div class="alert alert-danger">
-                <p>Oops, something went wrong! Please check the errors below.</p>
-                </div>
-            <% end %>
-
-           
-
-            <div class="field">
-                <%= label f, :name, class: "label title is-6" %>
-                <div class="control">
-                    <%= text_input f, :name %>
-                    <%= error_tag f, :name %>
-                </div>
-            </div>
-
-            <div class="field">
-                <%= label f, :description, class: "label title is-6" %>
-                <div class="control">
-                    <%= textarea f, :description %>
-                    <%= error_tag f, :description %>
-                </div>
-            </div>
-
-            <div class="field">
-                <%= label f, :cover_url, class: "label title is-6" %>
-                <div class="control">
-                    <%= file_input f, :cover_url  %>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <%= submit "Save", class: "button is-small" %>
-                </div>
-            </div>
-        <% end %>
-
+  <div class="container">
+    <%= form_for @changeset, @action, [multipart: true, csrf_token: true ], fn f -> %>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+      </div>
+    <% end %>
+    <div class="field">
+      <%= label f, :name, class: "label title is-6" %>
+      <div class="control">
+        <%= text_input f, :name %>
+        <%= error_tag f, :name %>
+      </div>
     </div>
+    <div class="field">
+      <%= label f, :description, class: "label title is-6" %>
+      <div class="control">
+        <%= textarea f, :description %>
+        <%= error_tag f, :description %>
+      </div>
+    </div>
+    <div class="field">
+      <%= label f, :cover_url, class: "label title is-6" %>
+      <div class="control">
+        <%= file_input f, :cover_url  %>
+        <%= if @book do %>
+          <img src="<%= get_image_thumb(@book.cover_url,@book) %>" />
+        <% end %>
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <%= submit "Save", class: "button is-small" %>
+      </div>
+    </div>
+  <% end %>
+</div>
 </section>

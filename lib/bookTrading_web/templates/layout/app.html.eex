@@ -5,66 +5,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>BookTrading · Phoenix Framework</title>
-     <script
+    <script
       defer
       src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
     ></script>
-
- 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"
     />
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-  </head>
-  <body>
-    
-  
-  <nav class="navbar">
-   <div class="navbar-start">
-     <%= if @current_user do %>
-      <div class="buttons">
-      
-      <%= link "Books", to: Routes.user_book_path(@conn, :index), class: "button is-primary is-small" %>
-      <%= link "Transactions", to: Routes.user_transaction_path(@conn, :index), class: "button is-primary is-small" %>
+      <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/app.css") %>'/>
+    </head>
+    <body>
+      <div id="main-layout">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+              <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, & modern CSS framework based on Flexbox" width="112" height="28">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
+          <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+              <%= if @current_user do %>
+                <div class="buttons">
+                  <%= link "Books", to: Routes.user_book_path(@conn, :index), class: " is-small navbar-item" %>
+                  <%= link "Transactions", to: Routes.user_transaction_path(@conn, :index), class: " is-small navbar-item" %>
+                </div>
+              <% end %>
+            </div>
+            <%= if @current_user do %>
+              <div class="navbar-end">
+                <div class="buttons">
+                  <a class="button is-dark is-small" href="/signout">
+                    Signout
+                  </a>
+                </div>
+              </div>
+            <% else %>
+              <div class="navbar-end">
+                <div class="buttons">
+                  <a class="button is-dark is-small" href="/signup">
+                    Signup
+                  </a>
+                  <a class="button is-dark is-small" href="/signin">
+                    Signin
+                  </a>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </nav>
+        <main role="main" class="container">
+          <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+          <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+          <%= render @view_module, @view_template, assigns %>
+        </main>
       </div>
-     <% end %>
-   </div>
-    <%= if @current_user do %>
-    <div class="navbar-end">
-      <div class="buttons">
-        
-          <a class="button is-dark is-small" href="/signout">
-            Signout
-          </a>
-       
-                
-      
-      
-      </div>
-    </div>
-    <% else %>
-    <div class="navbar-end">
-      <div class="buttons">
-        
-          <a class="button is-dark is-small" href="/signup">
-            Signup
-          </a>
-       
-                
-          <a class="button is-dark is-small" href="/signin">
-            Signin
-          </a>
-      
-      </div>
-    </div>
-    <% end %>
-    </nav>
-      <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= render @view_module, @view_template, assigns %>
-    </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-  </body>
-</html>
+      <footer class="footer" id="footer-layout">
+        <div class="content has-text-centered">
+          <p>
+            <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+            is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+          </p>
+        </div>
+      </footer>
+      <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    </body>
+  </html>

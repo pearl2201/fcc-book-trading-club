@@ -18,52 +18,67 @@ defmodule BookTradingWeb.UserBookController do
 
     conn
     |> put_user
-    |> render("new.html", changeset: changeset, token: get_csrf_token())
+    |> render("new.html", changeset: changeset, book: nil)
   end
 
-  def create(conn, params) do
-    IO.inspect(params)
+  def create(conn, %{"book" => book_params}) do
     current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+
+    case BookManagement.add_user_book(book_params, current_user.id) do
+      {:ok, book} ->
+        conn
+        |> put_user
+        |> put_flash(:info, "User1 created successfully.")
+        |> redirect(to: Routes.user_book_path(conn, :show, book))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_user
+        |> render("new.html", changeset: changeset)
+    end
+  end
+
+  def update(conn, %{"id" => id, "book" => book_params}) do
+    book = BookManagement.get_book!(id)
+
+    case BookManagement.update_book(book, book_params) do
+      {:ok, book} ->
+        conn
+        |> put_user
+        |> put_flash(:info, "Book updated successfully.")
+        |> redirect(to: Routes.user_book_path(conn, :show, book))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_user
+        |> render("edit.html", book: book, changeset: changeset)
+    end
+  end
+
+  def edit(conn, %{"id" => id}) do
+    book = BookManagement.get_book!(id)
+    changeset = BookManagement.change_book(book)
+    conn
+      |> put_user
+      |>    render( "edit.html", book: book, changeset: changeset)
+
+  end
+
+  def show(conn, %{"id" => id}) do
+    book = BookManagement.get_book!(id)
 
     conn
     |> put_user
-    |> render("index.html", books: books)
+    |> render("show.html", book: book)
   end
 
-  def update(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+  def delete(conn, %{"id" => id}) do
+    book = BookManagement.get_book!(id)
+    {:ok, _book} = BookManagement.delete_book(book)
 
     conn
     |> put_user
-    |> render("index.html", books: books)
-  end
-
-  def edit(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
-
-    conn
-    |> put_user
-    |> render("index.html", books: books)
-  end
-
-  def show(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
-
-    conn
-    |> put_user
-    |> render("index.html", books: books)
-  end
-
-  def delete(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
-
-    conn
-    |> put_user
-    |> render("index.html", books: books)
+    |> put_flash(:info, "User1 deleted successfully.")
+    |> redirect(to: Routes.user_book_path(conn, :index))
   end
 end

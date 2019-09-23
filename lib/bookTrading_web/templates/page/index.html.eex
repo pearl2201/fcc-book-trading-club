@@ -1,5 +1,63 @@
-
-
-<section class="row">
- 
+<section class="section">
+  <div class='rows'>
+    
+    <div class="row">
+      <h3 class="title is-3">Listing Books</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>idx</th>
+            <th>cover</th>
+            <th>name</th>
+            <th>description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for {book,idx} <-  Enum.with_index(@books) do %>
+            <tr>
+              <td><%= idx %> </td>
+              <td><img src="<%= get_image_thumb(book.cover_url,book) %>" /> </td>
+              <td><%= book.name %></td>
+              <td><%= book.description %></td>
+              <td>
+                <div class="buttons">
+                  <%= link "Trade", to: Routes.user_book_path(@conn, :show, book), class: "button is-small is-link" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <nav class="pagination" role="navigation" aria-label="pagination">
+        <a class="pagination-previous">Previous</a>
+        <a class="pagination-next">Next page</a>
+        <ul class="pagination-list">
+          <li>
+            <a class="pagination-link" aria-label="Goto page 1">1</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 45">45</a>
+          </li>
+          <li>
+            <a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 47">47</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 86">86</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </section>

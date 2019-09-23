@@ -10,7 +10,7 @@ defmodule BookTradingWeb.PasswordAuthController do
   end
 
   def create(conn, params) do
-    user = PasswordAccount.create(params)
+    {:ok, user} = PasswordAccount.create(params)
 
     conn
     |> Guardian.Plug.sign_in(Account_Guardian, user)

@@ -47,6 +47,14 @@ defmodule BookTradingWeb do
       import BookTradingWeb.ErrorHelpers
       import BookTradingWeb.Gettext
       alias BookTradingWeb.Router.Helpers, as: Routes
+
+      def get_image(image, owner) do
+        BookTrading.ImageUploader.url({image, owner})
+      end
+
+      def get_image_thumb(image, owner) do
+        BookTrading.ImageUploader.url({image, owner}, :thumb)
+      end
     end
   end
 

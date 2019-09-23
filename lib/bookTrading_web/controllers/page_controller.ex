@@ -1,12 +1,20 @@
 defmodule BookTradingWeb.PageController do
   use BookTradingWeb, :controller
 
+  alias BookTrading.BookManagement
+
   def index(conn, _params) do
+    current_user = Guardian.Plug.current_resource(conn)
 
+    books =
+      if current_user != nil do
+        BookManagement.list_tradable_book(current_user.id)
+      else
+        BookManagement.list_tradable_book()
+      end
 
-    #render(conn, "index.html", current_user: current_user)
     conn
     |> put_user
-    |> render("index.html")
+    |> render("index.html", books: books)
   end
 end

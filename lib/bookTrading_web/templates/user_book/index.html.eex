@@ -1,29 +1,67 @@
-<h1>Listing Books</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>name</th>
-      <th>description</th>
-      <th>cover</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for book <- @books do %>
-    <tr>
-      <td><%= book.name %></td>
-      <td><%= book.description %></td>
-      <td><img src=<%= book.description %> /> </td>
-
-      <td>
-        <%= link "Show", to: Routes.user_book_path(@conn, :show, book) %>
-        <%= link "Edit", to: Routes.user_book_path(@conn, :edit, book) %>
-        <%= link "Delete", to: Routes.user_book_path(@conn, :delete, book), method: :delete, data: [confirm: "Are you sure?"] %>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
-<span><%= link "New Book", to: Routes.user_book_path(@conn, :new) %></span>
+<section class="section">
+  <div class='rows'>
+    <div class="row">
+      <span class="is-pulled-right"><%= link "New Book", to: Routes.user_book_path(@conn, :new) %></span>
+    </div>
+    <div class="row">
+      <h3 class="title is-3">Listing Books</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>idx</th>
+            <th>cover</th>
+            <th>name</th>
+            <th>description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for {book,idx} <-  Enum.with_index(@books) do %>
+            <tr>
+              <td><%= idx %> </td>
+              <td><img src="<%= get_image_thumb(book.cover_url,book) %>" /> </td>
+              <td><%= book.name %></td>
+              <td><%= book.description %></td>
+              <td>
+                <div class="buttons">
+                  <%= link "Show", to: Routes.user_book_path(@conn, :show, book), class: "button is-small is-link" %>
+                  <%= link "Edit", to: Routes.user_book_path(@conn, :edit, book), class: "button is-small is-link" %>
+                  <%= link "Delete", to: Routes.user_book_path(@conn, :delete, book), method: :delete, data: [confirm: "Are you sure?"], class: "button is-danger is-small is-link" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <nav class="pagination" role="navigation" aria-label="pagination">
+        <a class="pagination-previous">Previous</a>
+        <a class="pagination-next">Next page</a>
+        <ul class="pagination-list">
+          <li>
+            <a class="pagination-link" aria-label="Goto page 1">1</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 45">45</a>
+          </li>
+          <li>
+            <a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 47">47</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="Goto page 86">86</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>

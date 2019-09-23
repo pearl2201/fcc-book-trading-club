@@ -20,7 +20,7 @@ defmodule BookTrading.MixProject do
   def application do
     [
       mod: {BookTrading.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools,:arc_ecto]
     ]
   end
 
@@ -50,7 +50,9 @@ defmodule BookTrading.MixProject do
       {:poison, "~> 3.0", override: true},
       {:bcrypt_elixir, "~> 2.0"},
       {:dogma, ">= 0.0.0", only: [:dev, :test]},
-      {:guardian, "~> 1.2"}
+      {:guardian, "~> 1.2"},
+      {:arc, "~> 0.11.0"},
+      {:arc_ecto, "~> 0.11.1"}
     ]
   end
 
