@@ -22,7 +22,7 @@
               <td><%= book.description %></td>
               <td>
                 <div class="buttons">
-                  <%= link "Trade", to: Routes.user_book_path(@conn, :show, book), class: "button is-small is-link" %>
+                  <%= link "Trade", to: Routes.book_path(@conn, :show, book), class: "button is-small is-link" %>
                 </div>
               </td>
             </tr>

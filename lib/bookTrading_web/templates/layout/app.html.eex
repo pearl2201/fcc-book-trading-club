@@ -32,8 +32,8 @@
             <div class="navbar-start">
               <%= if @current_user do %>
                 <div class="buttons">
-                  <%= link "Books", to: Routes.user_book_path(@conn, :index), class: " is-small navbar-item" %>
-                  <%= link "Transactions", to: Routes.user_transaction_path(@conn, :index), class: " is-small navbar-item" %>
+                  <%= link "Books", to: Routes.book_path(@conn, :index), class: " is-small navbar-item" %>
+                  <%= link "Transactions", to: Routes.transaction_path(@conn, :index), class: " is-small navbar-item" %>
                 </div>
               <% end %>
             </div>

@@ -1,7 +1,8 @@
-defmodule BookTradingWeb.UserTransactionController do
+defmodule BookTradingWeb.TransactionController do
   use BookTradingWeb, :controller
 
   alias BookTrading.BookManagement
+  alias BookTrading.BookTransaction
 
   def index(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
@@ -30,39 +31,40 @@ defmodule BookTradingWeb.UserTransactionController do
     |> render("index.html", books: books)
   end
 
-  def update(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+  def show(conn, %{"id" => id}) do
+    transaction = BookTransaction.get_transaction!(id)
 
     conn
     |> put_user
-    |> render("index.html", books: books)
+    |> render("show.html", transaction: transaction)
   end
 
-  def edit(conn, _params) do
+  def delete(conn, %{"id" => id}) do
     current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+    {:ok, _transaction} = BookTransaction.delete(id, current_user.id)
 
     conn
-    |> put_user
-    |> render("index.html", books: books)
+    |> put_flash(:info, "Transaction deleted successfully.")
+    |> redirect(to: Routes.book_path(conn, :index))
   end
 
-  def show(conn, _params) do
+  def invite(conn, %{"book_given_id" => book_given_id, "book_received_id" => book_received_id}) do
     current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+    {:ok, transaction} = BookTransaction.invite(book_given_id, current_user.id, book_received_id)
 
     conn
     |> put_user
-    |> render("index.html", books: books)
+    |> put_flash(:info, "Book updated successfully.")
+    |> redirect(to: Routes.transaction_path(conn, :show, transaction))
   end
 
-  def delete(conn, _params) do
+  def accept(conn, %{"transaction_id" => transaction_id}) do
     current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+    {:ok, book} = BookTransaction.accept(transaction_id, current_user.id)
 
     conn
     |> put_user
-    |> render("index.html", books: books)
+    |> put_flash(:info, "Book updated successfully.")
+    |> redirect(to: Routes.book_path(conn, :show, book))
   end
 end

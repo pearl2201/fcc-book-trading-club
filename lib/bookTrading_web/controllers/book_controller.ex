@@ -1,4 +1,4 @@
-defmodule BookTradingWeb.UserBookController do
+defmodule BookTradingWeb.BookController do
   use BookTradingWeb, :controller
 
   alias BookTrading.BookTrade.Book
@@ -29,7 +29,7 @@ defmodule BookTradingWeb.UserBookController do
         conn
         |> put_user
         |> put_flash(:info, "User1 created successfully.")
-        |> redirect(to: Routes.user_book_path(conn, :show, book))
+        |> redirect(to: Routes.book_path(conn, :show, book))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
@@ -46,7 +46,7 @@ defmodule BookTradingWeb.UserBookController do
         conn
         |> put_user
         |> put_flash(:info, "Book updated successfully.")
-        |> redirect(to: Routes.user_book_path(conn, :show, book))
+        |> redirect(to: Routes.book_path(conn, :show, book))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
@@ -79,6 +79,6 @@ defmodule BookTradingWeb.UserBookController do
     conn
     |> put_user
     |> put_flash(:info, "User1 deleted successfully.")
-    |> redirect(to: Routes.user_book_path(conn, :index))
+    |> redirect(to: Routes.book_path(conn, :index))
   end
 end

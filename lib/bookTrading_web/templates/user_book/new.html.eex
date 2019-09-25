@@ -1,3 +1,0 @@
-<h1>Edit User1</h1>
-<%= render "form.html", Map.put(assigns, :action, Routes.user_book_path(@conn, :create)) %>
-<span><%= link "Back", to: Routes.user_book_path(@conn, :index) %></span>

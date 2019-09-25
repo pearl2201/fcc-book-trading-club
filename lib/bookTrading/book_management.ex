@@ -4,32 +4,27 @@ defmodule BookTrading.BookManagement do
 
   alias BookTrading.BookTrade.Book
 
+  def list_books() do
+    Repo.all(Book)
+  end
+
   def list_user_book(owner_id) do
     query = from b in Book, where: b.owner_id == ^owner_id, select: b
     Repo.all(query)
   end
 
-  def list_tradable_book() do
-    query =
-      from b in Book,
-        where: is_nil(b.transaction_given_id) and is_nil(b.transaction_received_id),
-        select: b
-
-    Repo.all(query)
-  end
-
-  def list_tradable_book(except_user_id) do
+  def list_tradable_book(owner_id) do
     query =
       from b in Book,
         where:
-          b.owner_id != ^except_user_id and is_nil(b.transaction_given_id) and
+          b.owner_id == ^owner_id and is_nil(b.transaction_given_id) and
             is_nil(b.transaction_received_id),
         select: b
 
     Repo.all(query)
   end
 
-  def list_tradable_book(except_user_id) do
+  def list_not_owner_book(except_user_id) do
     query =
       from b in Book,
         where:
@@ -49,7 +44,7 @@ defmodule BookTrading.BookManagement do
   end
 
   def get_book!(book_id) do
-    Repo.get!(Book, book_id)
+    Repo.get!(Book, book_id) |> Repo.preload(:transaction)
   end
 
   def delete_book(%Book{} = book) do
@@ -59,6 +54,18 @@ defmodule BookTrading.BookManagement do
   def update_book(%Book{} = book, attrs \\ %{}) do
     book
     |> Book.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def set_transaction_to_book(:book_given, %Book{} = book, transaction) do
+    book
+    |> Book.changeset(%{"transaction_given_id" => transaction.id})
+    |> Repo.update()
+  end
+
+  def set_transaction_to_book(:book_received, %Book{} = book, transaction) do
+    book
+    |> Book.changeset(%{"transaction_received_id" => transaction.id})
     |> Repo.update()
   end
 end

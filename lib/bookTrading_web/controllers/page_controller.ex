@@ -10,7 +10,7 @@ defmodule BookTradingWeb.PageController do
       if current_user != nil do
         BookManagement.list_tradable_book(current_user.id)
       else
-        BookManagement.list_tradable_book()
+        BookManagement.list_books()
       end
 
     conn

@@ -37,6 +37,7 @@ defmodule BookTrading.Repo.Migrations.Setup do
     create table(:transactions) do
       add :requester_id, references(:users)
       add :receiver_id, references(:users)
+      add :finished, :boolean, default: :false
       timestamps()
     end
 

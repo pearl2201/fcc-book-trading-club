@@ -31,15 +31,19 @@ defmodule BookTradingWeb.Router do
     get "/signin", PasswordAuthController, :get_signin
     post "/signin", PasswordAuthController, :signin
     get "/signout", AuthController, :signout
+    resources "/books", BookController, only: [:show]
   end
 
   scope "/", BookTradingWeb do
     pipe_through [:browser, :auth, :ensure_auth]
+    resources "/books", BookController
+    resources "/transactions", TransactionController
 
     scope "/users" do
-      resources "/books", UserBookController
-      resources "/transactions", UserTransactionController
     end
+
+    post "/books/:id_book/invite", TransactionController, :invite
+    post "/books/:id_book/accept", TransactionController, :accept
   end
 
   # Other scopes may use custom stacks.

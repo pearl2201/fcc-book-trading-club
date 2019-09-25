@@ -52,7 +52,8 @@ defmodule BookTrading.MixProject do
       {:dogma, ">= 0.0.0", only: [:dev, :test]},
       {:guardian, "~> 1.2"},
       {:arc, "~> 0.11.0"},
-      {:arc_ecto, "~> 0.11.1"}
+      {:arc_ecto, "~> 0.11.1"},
+      {:ecto_enum, "~> 1.3"}
     ]
   end
 

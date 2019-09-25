@@ -3,6 +3,7 @@ defmodule BookTrading.BookTrade.Transaction do
   import Ecto.Changeset
 
   schema "transactions" do
+    field :finished, :boolean, default: false
     has_one :book_given, BookTrading.BookTrade.Book, foreign_key: :transaction_given_id
     has_one :book_received, BookTrading.BookTrade.Book, foreign_key: :transaction_received_id
 
