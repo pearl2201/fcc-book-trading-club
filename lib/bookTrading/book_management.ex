@@ -44,7 +44,7 @@ defmodule BookTrading.BookManagement do
   end
 
   def get_book!(book_id) do
-    Repo.get!(Book, book_id) |> Repo.preload(:transaction)
+    Repo.get!(Book, book_id) |> Repo.preload([:transaction_given,:transaction_received])
   end
 
   def delete_book(%Book{} = book) do

@@ -6,7 +6,7 @@ defmodule BookTradingWeb.BookController do
 
   def index(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
-    books = BookManagement.list_user_book(current_user.id)
+    books = BookManagement.list_not_owner_book(current_user.id)
 
     conn
     |> put_user
@@ -58,10 +58,10 @@ defmodule BookTradingWeb.BookController do
   def edit(conn, %{"id" => id}) do
     book = BookManagement.get_book!(id)
     changeset = BookManagement.change_book(book)
-    conn
-      |> put_user
-      |>    render( "edit.html", book: book, changeset: changeset)
 
+    conn
+    |> put_user
+    |> render("edit.html", book: book, changeset: changeset)
   end
 
   def show(conn, %{"id" => id}) do

@@ -1,4 +1,4 @@
-defmodule BookTradingWeb.UserBookView do
+defmodule BookTradingWeb.BookView do
   use BookTradingWeb, :view
 
 

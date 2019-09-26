@@ -1,0 +1,36 @@
+<section>
+  <div class="columns">
+    <div class="column is-half">
+      <%= for book <- @books do %>
+        <div id="<%= book.id %>" class="book-gived-option">
+          <form action="<%= Routes.transaction_path(@conn, :create, book_given_id: book.id,book_received_id: @book_request.id ) %>" method="POST">
+          <input type="hidden" value="<%= @token %>" name="_csrf_token"/>
+        <h6 class="title is-6"><%= book.name %> </h6>
+        <img src="<%= get_image_thumb(book.cover_url,book) %>" />
+        <input type="submit" value="submit" class="button is-small" />
+      </form>
+    </div>
+  <% end %>
+</div>
+<div class="column is-half">
+  <ul>
+    <li>
+      <strong>Name:</strong>
+      <%= @book_request.name %>
+    </li>
+    <li>
+      <strong>Description:</strong>
+      <%= @book_request.description %>
+    </li>
+    <li>
+      <strong>Cover:</strong>
+      <img src="<%= get_image_thumb(@book_request.cover_url,@book_request) %>" />
+    </li>
+    <li>
+      <strong>Owner:</strong>
+      <%= link @book_owner.username, to: Routes.user_path(@conn, :show, @book_owner) %></span>
+  </li>
+</ul>
+</div>
+</div>
+</section>

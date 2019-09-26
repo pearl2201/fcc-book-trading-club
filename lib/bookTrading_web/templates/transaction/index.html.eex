@@ -1,0 +1,107 @@
+<section class="section">
+  <div class="list-transactions-wrapper">
+    <div id="to_me_transaction" class="list-transaction">
+      <header class="header-list-transaction  title is-4">To Me Transation</header>
+      <div class="transactions">
+        <%= for transaction_wrap <- @to_me_transactions, transaction = Map.get(transaction_wrap, "transaction"),receiver = Map.get(transaction_wrap, "receiver"),requester = Map.get(transaction_wrap, "requester") do %>
+          <div class="transaction">
+            <div class="columns">
+              <div class="column is-half book-from">
+                <h5 class="title is-5">From <%= link requester.username, to: Routes.user_path(@conn, :show, requester ) %> </h6>
+                <ul>
+                  <li>
+                    <strong>Name:</strong>
+                    <%= transaction.book_given.name %>
+                  </li>
+                  <li>
+                    <strong>Description:</strong>
+                    <%=transaction.book_given.description %>
+                  </li>
+                  <li>
+                    <strong>Cover:</strong>
+                    <img src="<%= get_image_thumb(transaction.book_given.cover_url,transaction.book_given) %>" />
+                  </li>
+                </ul>
+              </div>
+              <div class="column is-half book-to">
+                <h5 class="title is-5">To <%= link receiver.username, to: Routes.user_path(@conn, :show, receiver ) %></h5>
+                <ul>
+                  <li>
+                    <strong>Name:</strong>
+                    <%= transaction.book_received.name %>
+                  </li>
+                  <li>
+                    <strong>Description:</strong>
+                    <%=transaction.book_received.description %>
+                  </li>
+                  <li>
+                    <strong>Cover:</strong>
+                    <img src="<%= get_image_thumb(transaction.book_received.cover_url,transaction.book_received) %>" />
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <footer>
+              <div class="buttons is-pulled-right">
+                <%= link "Accept", to: Routes.transaction_path(@conn, :accept, transaction) , method: :post, class: "button is-primary is-small is-link" %>
+                <%= link "Decline", to: Routes.transaction_path(@conn, :decline, transaction) , method: :post, class: "button is-danger is-small is-link" %>
+              </form>
+            </div>
+          </footer>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div id="from_me_transaction" class="list-transaction">
+    <header class="header-list-transaction  title is-4">From Me Transation</header>
+    <div class="transactions">
+      <%= for transaction_wrap <- @from_me_transactions, transaction = Map.get(transaction_wrap, "transaction"),receiver = Map.get(transaction_wrap, "receiver"),requester = Map.get(transaction_wrap, "requester") do %>
+        <div class="transaction">
+          <div class="columns">
+            <div class="column is-half book-from">
+              <h5 class="title is-5">From <%= link requester.username, to: Routes.user_path(@conn, :show, requester ) %> </h6>
+              <ul>
+                <li>
+                  <strong>Name:</strong>
+                  <%= transaction.book_given.name %>
+                </li>
+                <li>
+                  <strong>Description:</strong>
+                  <%=transaction.book_given.description %>
+                </li>
+                <li>
+                  <strong>Cover:</strong>
+                  <img src="<%= get_image_thumb(transaction.book_given.cover_url,transaction.book_given) %>" />
+                </li>
+              </ul>
+            </div>
+            <div class="column is-half book-to">
+              <h5 class="title is-5">To <%= link receiver.username, to: Routes.user_path(@conn, :show, receiver ) %></h5>
+              <ul>
+                <li>
+                  <strong>Name:</strong>
+                  <%= transaction.book_received.name %>
+                </li>
+                <li>
+                  <strong>Description:</strong>
+                  <%=transaction.book_received.description %>
+                </li>
+                <li>
+                  <strong>Cover:</strong>
+                  <img src="<%= get_image_thumb(transaction.book_received.cover_url,transaction.book_received) %>" />
+                </li>
+              </ul>
+            </div>
+          </div>
+          <footer>
+            <div class="buttons is-pulled-right">
+              <%= link "Delete", to: Routes.transaction_path(@conn, :delete, transaction), method: :delete, class: "button is-danger is-small is-link" %>
+            </form>
+          </div>
+        </footer>
+      </div>
+    <% end %>
+  </div>
+</div>
+</div>
+</section>

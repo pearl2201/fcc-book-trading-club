@@ -35,12 +35,10 @@ defmodule BookTrading.BookTransaction do
       # make transaction
       {:ok, transaction} =
         %Transaction{}
-        |> Transaction.changeset(%{
-          "requester_id" => current_user_id,
-          "receiver_id" => book_received.id
-        })
+        |> Transaction.changeset(%{})
         |> Repo.insert()
 
+      IO.inspect(transaction)
       BookManagement.set_transaction_to_book(:book_given, book_given, transaction)
       BookManagement.set_transaction_to_book(:book_received, book_received, transaction)
 
@@ -57,10 +55,10 @@ defmodule BookTrading.BookTransaction do
   def accept(transaction_id, current_user_id) do
     # query transaction
     transaction =
-      Repo.get_by(Transaction, id: transaction_id, receiver_id: current_user_id, finished: false)
+      Repo.get_by(Transaction, id: transaction_id, finished: false)
       |> Repo.preload([:book_given, :book_received])
 
-    if transaction do
+    if transaction != nil and transaction.book_received.owner_id == current_user_id do
       # complete transaction
       transaction
       |> Transaction.changeset(%{
@@ -68,30 +66,54 @@ defmodule BookTrading.BookTransaction do
       })
       |> Repo.update()
 
+      requester_id = transaction.book_given.owner_id
+      receiver_id = transaction.book_received.owner_id
       # give book from requester to inviter
       transaction.book_received
-      |> Book.changeset(%{owner_id: transaction.requester_id})
+      |> Book.changeset(%{
+        owner_id: requester_id,
+        transaction_given_id: nil,
+        transaction_received_id: nil
+      })
       |> Repo.update()
 
       # give book from inviter to requester
       transaction.book_given
-      |> Book.changeset(%{owner_id: transaction.receiver_id})
+      |> Book.changeset(%{
+        owner_id: receiver_id,
+        transaction_given_id: nil,
+        transaction_received_id: nil
+      })
       |> Repo.update()
 
-      {:ok, transaction.book}
+      {:ok, transaction.book_given}
     else
-      {:error, :transaction_is_not_valid}
+      {:error, :transaction_not_found}
     end
   end
 
   def decline(transaction_id, current_user_id) do
-    Repo.get_by(Transaction, id: transaction_id, receiver_id: current_user_id, finished: false)
-    |> Repo.delete()
+    transaction =
+      Repo.get_by(Transaction, id: transaction_id, finished: false)
+      |> Repo.preload(:book_received)
+
+    if transaction != nil and transaction.book_received.owner_id == current_user_id do
+      Repo.delete(transaction)
+    else
+      {:error, :transaction_not_found}
+    end
   end
 
   def delete(transaction_id, current_user_id) do
-    Repo.get_by(Transaction, id: transaction_id, requester_id: current_user_id, finished: false)
-    |> Repo.delete()
+    transaction =
+      Repo.get_by(Transaction, id: transaction_id, finished: false)
+      |> Repo.preload(:book_given)
+
+    if transaction != nil and transaction.book_given.owner_id == current_user_id do
+      Repo.delete(transaction)
+    else
+      {:error, :transaction_not_found}
+    end
   end
 
   @doc """
@@ -106,8 +128,11 @@ defmodule BookTrading.BookTransaction do
   def list_transaction(:from_me, :finished, current_user_id) do
     query =
       from t in Transaction,
-        where: t.requester_id == ^current_user_id and t.finished == true,
-        select: t
+        join: b in Book,
+        on: t.id == t.transaction_given_id,
+        where: b.owner_id == ^current_user_id and t.finished == true,
+        select: t,
+        preload: [:book_given, :book_received]
 
     Repo.all(query)
     |> Enum.map(fn x -> compose_transaction(x) end)
@@ -123,8 +148,11 @@ defmodule BookTrading.BookTransaction do
   def list_transaction(:to_me, :finished, current_user_id) do
     query =
       from t in Transaction,
-        where: t.receiver_id == ^current_user_id and t.finished == true,
-        select: t
+        join: b in Book,
+        on: t.id == b.transaction_received_id,
+        where: b.owner_id == ^current_user_id and t.finished == true,
+        select: t,
+        preload: [:book_given, :book_received]
 
     Repo.all(query)
     |> Enum.map(fn x -> compose_transaction(x) end)
@@ -140,8 +168,11 @@ defmodule BookTrading.BookTransaction do
   def list_transaction(:to_me, :not_finished, current_user_id) do
     query =
       from t in Transaction,
-        where: t.receiver_id == ^current_user_id and t.finished == false,
-        select: t
+        join: b in Book,
+        on: b.transaction_received_id == t.id,
+        where: b.owner_id == ^current_user_id and t.finished == false,
+        select: t,
+        preload: [:book_given, :book_received]
 
     Repo.all(query)
     |> Enum.map(fn x -> compose_transaction(x) end)
@@ -157,8 +188,11 @@ defmodule BookTrading.BookTransaction do
   def list_transaction(:from_me, :not_finished, current_user_id) do
     query =
       from t in Transaction,
-        where: t.requester_id == ^current_user_id and t.finished == false,
-        select: t
+        join: b in Book,
+        on: t.id == b.transaction_given_id,
+        where: b.owner_id == ^current_user_id and t.finished == false,
+        select: t,
+        preload: [:book_given, :book_received]
 
     Repo.all(query)
     |> Enum.map(fn x -> compose_transaction(x) end)
@@ -174,15 +208,15 @@ defmodule BookTrading.BookTransaction do
   def compose_transaction(%Transaction{} = transaction) do
     query =
       from u in User,
-        where: u.id == ^transaction.receiver_id,
-        select: %{"username" => u.username, "id" => u.id}
+        where: u.id == ^transaction.book_received.owner_id,
+        select: %User{username: u.username, id: u.id}
 
     receiver = Repo.one(query)
 
     query =
       from u in User,
-        where: u.id == ^transaction.requester_id,
-        select: %{"username" => u.username, "id" => u.id}
+        where: u.id == ^transaction.book_given.owner_id,
+        select: %User{username: u.username, id: u.id}
 
     requester = Repo.one(query)
     %{"transaction" => transaction, "requester" => requester, "receiver" => receiver}

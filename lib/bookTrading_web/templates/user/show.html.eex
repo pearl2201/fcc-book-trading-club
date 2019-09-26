@@ -1,7 +1,9 @@
 <section class="section">
   <div class='rows'>
     <div class="row">
-      <span class="is-pulled-right"><%= link "New Book", to: Routes.book_path(@conn, :new) %></span>
+      <%= if @current_user.id == @user.id do %>
+        <span class="is-pulled-right"><%= link "New Book", to: Routes.book_path(@conn, :new) %></span>
+      <% end %>
     </div>
     <div class="row">
       <h3 class="title is-3">Listing Books</h3>
@@ -24,8 +26,11 @@
               <td><%= book.description %></td>
               <td>
                 <div class="buttons">
-                  <%= link "Trade", to: Routes.transaction_path(@conn, :new, id: book.id), class: "button is-small is-link" %>
-                 
+                  <%= if @current_user.id == @user.id do %>
+                    <%= link "Show", to: Routes.book_path(@conn, :show, book), class: "button is-small is-link" %>
+                    <%= link "Edit", to: Routes.book_path(@conn, :edit, book), class: "button is-small is-link" %>
+                    <%= link "Delete", to: Routes.book_path(@conn, :delete, book), method: :delete, data: [confirm: "Are you sure?"], class: "button is-danger is-small is-link" %>
+                  <% end %>
                 </div>
               </td>
             </tr>

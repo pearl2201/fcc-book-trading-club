@@ -4,19 +4,17 @@ defmodule BookTrading.BookTrade.Transaction do
 
   schema "transactions" do
     field :finished, :boolean, default: false
-    has_one :book_given, BookTrading.BookTrade.Book, foreign_key: :transaction_given_id
-    has_one :book_received, BookTrading.BookTrade.Book, foreign_key: :transaction_received_id
-
-    belongs_to :requester, BookTrading.Account.User
-    belongs_to :receiver, BookTrading.Account.User
+    has_one :book_given, BookTrading.BookTrade.Book, foreign_key: :transaction_given_id, on_delete: :nilify_all
+    has_one :book_received, BookTrading.BookTrade.Book, foreign_key: :transaction_received_id, on_delete: :nilify_all
 
     timestamps()
   end
 
   @doc false
   def changeset(transaction, attrs) do
-    transaction
-    |> cast(attrs, [:book_given_id, :book_received_id, :requester_id, :accepter_id])
-  end
+    IO.inspect(attrs)
 
+    transaction
+    |> cast(attrs, [:finished])
+  end
 end

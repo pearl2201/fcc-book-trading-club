@@ -26,6 +26,37 @@ body {
 .columns.is-right {
     justify-content: flex-end;
 }
+.list-transaction
+{
+    margin: 1rem;
+    padding: 0.5rem;
+    border: 1px solid hsl(0, 0%, 86%);
+}
+
+.list-transaction footer{
+    text-align: right;
+}
+
+.list-transaction
+{
+    display: block;
+}
+
+form .button
+{
+margin:2px;
+}
+.transaction{
+    padding-bottom: 30px;
+}
+.transaction .column:first-child{
+    border-right: 1px solid hsl(0, 0%, 86%);
+}
+.header-list-transaction
+{
+    border-bottom: 1px solid hsl(0, 0%, 86%);
+}
+
 
 #back-container {
     margin-top: 1rem;
